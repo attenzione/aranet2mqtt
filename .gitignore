@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+
+# Local runs keep their configuration.yaml here
+data/
+
+# Local-only
+.claude/settings.local.json
+
+# OS
+.DS_Store

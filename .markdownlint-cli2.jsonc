@@ -1,0 +1,9 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false, // no line-length limit in docs
+    "MD060": { "style": "aligned" } // tables with aligned pipes
+  },
+  "globs": ["**/*.md"],
+  "gitignore": true
+}

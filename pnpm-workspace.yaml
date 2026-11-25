@@ -1,0 +1,5 @@
+# pnpm refuses to run a dependency's install scripts until the repo says so.
+# esbuild (through Vite) ships prebuilt binaries per platform; its postinstall
+# only checks them.
+allowBuilds:
+  esbuild: false

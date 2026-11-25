@@ -1,0 +1,6 @@
+Watching: all devices (passive)
+Interval: 15s | Press Ctrl+C to stop
+------------------------------------------------------------
+{"timestamp":"2026-11-25T20:49:12.885731444Z","device":"Aranet4 4C5D6","co2":1651,"temperature":21.9,"temperature_unit":"C","humidity":51,"pressure":1018.4,"pressure_unit":"hPa","battery":88,"status":"Red"}
+{"timestamp":"2026-11-25T20:49:12.885842684Z","device":"Aranet4 1A2B3","co2":1762,"temperature":23.2,"temperature_unit":"C","humidity":53,"pressure":1018.2,"pressure_unit":"hPa","battery":88,"status":"Red"}
+{"timestamp":"2026-11-25T20:50:22.117010557Z","device":"Aranet4 1A2B3","co2":1810,"temperature":23.2,"temperature_unit":"C","humidity":54,"pressure":1018.3,"pressure_unit":"hPa","battery":88,"status":"Red"}

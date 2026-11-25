@@ -1,0 +1,46 @@
+{
+  "name": "aranet2mqtt",
+  "version": "0.1.2",
+  "description": "Aranet4 sensors on MQTT as a Zigbee2MQTT-style bridge, with a web UI.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "build": "pnpm build:server && pnpm build:ui",
+    "build:server": "tsc -p tsconfig.json",
+    "build:ui": "vite build --config ui/vite.config.ts",
+    "dev": "node --watch src/main.ts",
+    "dev:ui": "vite --config ui/vite.config.ts",
+    "start": "node dist/server/main.js",
+    "lint": "eslint .",
+    "lint:md": "markdownlint-cli2",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.dev.json && tsc -p ui/tsconfig.json"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.12",
+    "fastify": "^5.12.8",
+    "mqtt": "^5.16.1",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@preact/preset-vite": "^2.10.6",
+    "@types/node": "^22.20.5",
+    "aedes": "^1.2.0",
+    "eslint": "^10.15.0",
+    "markdownlint-cli2": "^0.24.2",
+    "preact": "^11.2.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.74.0",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
