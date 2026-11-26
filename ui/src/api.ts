@@ -86,9 +86,7 @@ export interface LogEntry {
 export class ApiError extends Error {}
 
 async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
-  // location.origin never carries credentials, so this also works when the page
-  // was opened as http://user:pass@host/, where a relative fetch would throw.
-  const response = await fetch(new URL(path, location.origin), {
+  const response = await fetch(path, {
     method,
     headers: body === undefined ? {} : { 'content-type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),

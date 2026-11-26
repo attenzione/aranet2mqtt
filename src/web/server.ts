@@ -1,14 +1,13 @@
 /**
  * The web UI's server: a JSON API under /api and the built UI as static files.
- * Everything except /api/health needs the password (HTTP Basic, any user
- * name), because the UI is meant to be published through a reverse proxy.
+ * Like Zigbee2MQTT's frontend it has no login of its own; access control, if
+ * wanted, belongs in front of the port (a reverse proxy, a firewall).
  */
 
-import { createHash, timingSafeEqual } from 'node:crypto';
 import { existsSync } from 'node:fs';
 
 import fastifyStatic from '@fastify/static';
-import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import type { Bridge } from '../bridge/bridge.ts';
@@ -22,21 +21,10 @@ export interface WebOptions {
   bridge: Bridge;
   store: ConfigStore;
   logger: Logger;
-  /** Unset: the API answers 503 until ARANET2MQTT_PASSWORD is set. */
-  password: string | undefined;
   uiDir: string;
 }
 
-const digest = (value: string) => createHash('sha256').update(value).digest();
-
-function authorized(header: string | undefined, password: string): boolean {
-  if (!header?.startsWith('Basic ')) return false;
-  const decoded = Buffer.from(header.slice(6), 'base64').toString('utf8');
-  const given = decoded.slice(decoded.indexOf(':') + 1);
-  return timingSafeEqual(digest(given), digest(password));
-}
-
-/** The password and TLS key never leave the server; the UI only learns whether they are set. */
+/** The broker password and TLS key never leave the server; the UI only learns whether they are set. */
 function redactMqtt(mqtt: MqttConfig) {
   return {
     ...mqtt,
@@ -78,19 +66,8 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
 }
 
 export async function createWebServer(options: WebOptions): Promise<FastifyInstance> {
-  const { bridge, store, logger, password, uiDir } = options;
+  const { bridge, store, logger, uiDir } = options;
   const app = Fastify({ logger: false, bodyLimit: 256 * 1024 });
-
-  app.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
-    if (request.url === '/api/health') return;
-    if (!password) {
-      await reply.code(503).type('text/plain').send('Set ARANET2MQTT_PASSWORD to use the web UI.');
-      return;
-    }
-    if (!authorized(request.headers.authorization, password)) {
-      await reply.code(401).header('WWW-Authenticate', 'Basic realm="aranet2mqtt", charset="UTF-8"').send({ error: 'Password required' });
-    }
-  });
 
   app.setErrorHandler(async (error: unknown, _request, reply) => {
     if (error instanceof UserError) return reply.code(400).send({ error: error.message });

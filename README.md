@@ -11,7 +11,7 @@ Aranet4s ──Bluetooth broadcasts──▶ aranet2mqtt ──▶ Mosquitto ◀
 
 - **Bluetooth:** the upstream [`aranet`](https://github.com/cameronrye/aranet) CLI, unmodified and pinned in the [Dockerfile](Dockerfile), run as `aranet watch --passive`. It only listens to broadcasts and never connects, so nothing is paired. Each sensor needs **Smart Home integration** switched on in the Aranet Home app.
 - **MQTT:** Zigbee2MQTT 2.x message shapes, under a base topic of its own (default `aranet`).
-- **Web UI:** broker settings, sensors, timing and logs, password-protected. Everything is saved to `configuration.yaml` in the data directory.
+- **Web UI:** broker settings, sensors, timing and logs. Everything is saved to `configuration.yaml` in the data directory. Like Zigbee2MQTT's frontend it has no login of its own: if the port is reachable from untrusted networks, put a reverse proxy with authentication (or a firewall) in front of it.
 
 ## Topics
 
@@ -39,34 +39,31 @@ The container needs a Linux host running BlueZ, with its system D-Bus mounted. O
 
 ```sh
 docker run -d --name aranet2mqtt --restart unless-stopped \
-  -e ARANET2MQTT_PASSWORD=<web UI password> \
   -p 8081:8080 \
   -v /srv/aranet2mqtt:/data \
   -v /run/dbus:/run/dbus:ro \
   --security-opt apparmor=unconfined \
-  aranet2mqtt:0.1.2
+  aranet2mqtt:0.1.3
 ```
 
-Then open the web UI, log in with any user name and the password, and fill in the broker under **MQTT**. **Test connection** checks the settings before **Save and reconnect** applies them.
+Then open the web UI and fill in the broker under **MQTT**. **Test connection** checks the settings before **Save and reconnect** applies them.
 
-| Variable               | Default  | Meaning                                                   |
-| ---------------------- | -------- | --------------------------------------------------------- |
-| `ARANET2MQTT_PASSWORD` | (none)   | web UI password; the UI answers 503 until it is set       |
-| `ARANET2MQTT_PORT`     | `8080`   | web UI port inside the container                          |
-| `ARANET2MQTT_DATA`     | `/data`  | holds `configuration.yaml` (mode 0600)                    |
-| `ARANET2MQTT_SOURCE`   | `aranet` | `fake` makes up two sensors, for working away from the Pi |
-| `ARANET_BIN`           | `aranet` | the upstream CLI                                          |
+| Variable             | Default  | Meaning                                                   |
+| -------------------- | -------- | --------------------------------------------------------- |
+| `ARANET2MQTT_PORT`   | `8080`   | web UI port inside the container                          |
+| `ARANET2MQTT_DATA`   | `/data`  | holds `configuration.yaml` (mode 0600)                    |
+| `ARANET2MQTT_SOURCE` | `aranet` | `fake` makes up two sensors, for working away from the Pi |
+| `ARANET_BIN`         | `aranet` | the upstream CLI                                          |
 
-The same with Docker Compose, the password in a `.env` file next to it (`ARANET2MQTT_PASSWORD=…`):
+The same with Docker Compose:
 
 ```yaml
 services:
   aranet2mqtt:
-    image: aranet2mqtt:0.1.2
+    image: aranet2mqtt:0.1.3
     pull_policy: never # built locally, see "Build"
     container_name: aranet2mqtt
     restart: unless-stopped
-    env_file: .env
     ports:
       - "8081:8080"
     volumes:
@@ -97,7 +94,7 @@ pnpm lint && pnpm typecheck
 pnpm build         # dist/server and dist/ui
 
 # Fake sensors, API on 8080, UI with hot reload on 5173:
-ARANET2MQTT_SOURCE=fake ARANET2MQTT_DATA=./data ARANET2MQTT_PASSWORD=dev pnpm dev
+ARANET2MQTT_SOURCE=fake ARANET2MQTT_DATA=./data pnpm dev
 pnpm dev:ui
 ```
 

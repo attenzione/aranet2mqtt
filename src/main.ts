@@ -3,7 +3,6 @@
  *
  * Environment:
  *   ARANET2MQTT_DATA      data directory, holds configuration.yaml (default /data)
- *   ARANET2MQTT_PASSWORD  web UI password (required for the UI)
  *   ARANET2MQTT_PORT      web UI port (default 8080)
  *   ARANET2MQTT_SOURCE    "aranet" (default) or "fake" for made-up sensors
  *   ARANET_BIN            upstream CLI (default "aranet" on PATH)
@@ -53,10 +52,7 @@ async function main(): Promise<void> {
     commit: (env.ARANET_REF ?? 'dev').slice(0, 7),
   });
 
-  const web = await createWebServer({
-    bridge, store, logger, password: env.ARANET2MQTT_PASSWORD || undefined, uiDir: join(projectRoot, 'dist', 'ui'),
-  });
-  if (!env.ARANET2MQTT_PASSWORD) logger.warn('ARANET2MQTT_PASSWORD is not set: the web UI is locked');
+  const web = await createWebServer({ bridge, store, logger, uiDir: join(projectRoot, 'dist', 'ui') });
 
   let stopping = false;
   const shutdown = async (code: number) => {
