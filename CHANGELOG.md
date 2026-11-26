@@ -4,6 +4,7 @@ Newest first, one section per day.
 
 ## 2026-11-26
 
+- The Docker image runs Node 26 (LTS) instead of Node 22, which reaches end of life in April 2027. CI tests on Node 26 too.
 - CI on pull requests (drafts skipped until marked ready for review): lint, typecheck, tests and build, and the Docker image is built and smoke-tested. Dependabot also keeps the workflow's actions current.
 - Dependabot checks the npm packages and the Docker base images weekly.
 - The web UI no longer has a password, and `ARANET2MQTT_PASSWORD` is ignored. Like Zigbee2MQTT's frontend, access control belongs in front of the port (a reverse proxy with authentication, a firewall).

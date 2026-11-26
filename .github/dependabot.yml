@@ -23,7 +23,7 @@ updates:
           - minor
           - patch
     ignore:
-      # Tracks the Node 22 runtime in the Dockerfile; move both together by hand.
+      # Tracks the Node 26 runtime in the Dockerfile; move both together by hand.
       - dependency-name: "@types/node"
         update-types:
           - version-update:semver-major
@@ -38,7 +38,7 @@ updates:
     cooldown:
       default-days: 3
     ignore:
-      # node:22 matches engines and @types/node; move majors by hand.
+      # node:26 matches engines and @types/node; move majors by hand.
       - dependency-name: node
         update-types:
           - version-update:semver-major
