@@ -43,7 +43,7 @@ docker run -d --name aranet2mqtt --restart unless-stopped \
   -v /srv/aranet2mqtt:/data \
   -v /run/dbus:/run/dbus:ro \
   --security-opt apparmor=unconfined \
-  aranet2mqtt:0.1.3
+  aranet2mqtt:0.1.4
 ```
 
 Then open the web UI and fill in the broker under **MQTT**. **Test connection** checks the settings before **Save and reconnect** applies them.
@@ -60,7 +60,7 @@ The same with Docker Compose:
 ```yaml
 services:
   aranet2mqtt:
-    image: aranet2mqtt:0.1.3
+    image: aranet2mqtt:0.1.4
     pull_policy: never # built locally, see "Build"
     container_name: aranet2mqtt
     restart: unless-stopped
