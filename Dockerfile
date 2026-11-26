@@ -14,7 +14,7 @@ ARG ARANET_REF=e6410de96e2189dbda436c917f25863ff55d8e8d
 
 # ---------------------------------------------------------------------------
 # 1. The upstream `aranet` CLI, without the terminal dashboard or desktop GUI.
-FROM rust:1.90-slim-bookworm AS aranet-cli
+FROM rust:1.99-slim-bookworm AS aranet-cli
 ARG ARANET_REPO
 ARG ARANET_REF
 RUN apt-get update \
