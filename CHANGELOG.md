@@ -4,7 +4,7 @@ Newest first, one section per day.
 
 ## 2026-11-26
 
-- The repository has a Sponsor button: GitHub Sponsors, Ko-fi, Patreon and PayPal.
+- The repository has a Sponsor button: GitHub Sponsors and Ko-fi.
 - The Docker image runs Node 26 (LTS) instead of Node 22, which reaches end of life in April 2027. CI tests on Node 26 too.
 - CI on pull requests (drafts skipped until marked ready for review): lint, typecheck, tests and build, and the Docker image is built and smoke-tested. Dependabot also keeps the workflow's actions current.
 - Dependabot checks the npm packages and the Docker base images weekly.
