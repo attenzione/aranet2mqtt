@@ -1,5 +1,5 @@
-# Dependabot version updates, checked weekly. Minor and patch updates come as
-# one grouped pull request; majors come one by one.
+# Dependabot version updates, checked weekly on Friday at 05:00 UTC. Minor and
+# patch updates come as one grouped pull request; majors come one by one.
 #
 # Cooldown: pnpm 11 rejects lockfile entries published less than a day ago
 # (minimumReleaseAge), so `pnpm install --frozen-lockfile` in the Docker build
@@ -10,6 +10,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: friday
+      time: "05:00"
+      timezone: Etc/UTC
     cooldown:
       default-days: 3
     groups:
@@ -29,6 +32,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: friday
+      time: "05:00"
+      timezone: Etc/UTC
     cooldown:
       default-days: 3
     ignore:
@@ -36,3 +42,13 @@ updates:
       - dependency-name: node
         update-types:
           - version-update:semver-major
+
+  - package-ecosystem: github-actions # actions in .github/workflows
+    directory: /
+    schedule:
+      interval: weekly
+      day: friday
+      time: "05:00"
+      timezone: Etc/UTC
+    cooldown:
+      default-days: 3

@@ -4,9 +4,10 @@ Newest first, one section per day.
 
 ## 2026-11-26
 
-- The sensor's CO₂ light is published as Zigbee2MQTT's `air_quality` instead of `co2_status`: green → `excellent`, yellow → `moderate`, red → `poor`, and `unknown` when the sensor reports an error, as homey-z2m's `docs/air-quality.md` says a Z2M-format bridge should. homey-z2m shows it as Homey's built-in air quality level. The web UI shows the word next to the CO₂ reading.
-- The web UI no longer has a password, and `ARANET2MQTT_PASSWORD` is ignored. Like Zigbee2MQTT's frontend, access control belongs in front of the port (a reverse proxy with authentication, a firewall).
+- CI on pull requests (drafts skipped until marked ready for review): lint, typecheck, tests and build, and the Docker image is built and smoke-tested. Dependabot also keeps the workflow's actions current.
 - Dependabot checks the npm packages and the Docker base images weekly.
+- The web UI no longer has a password, and `ARANET2MQTT_PASSWORD` is ignored. Like Zigbee2MQTT's frontend, access control belongs in front of the port (a reverse proxy with authentication, a firewall).
+- The sensor's CO₂ light is published as Zigbee2MQTT's `air_quality` instead of `co2_status`: green → `excellent`, yellow → `moderate`, red → `poor`, and `unknown` when the sensor reports an error, as homey-z2m's `docs/air-quality.md` says a Z2M-format bridge should. homey-z2m shows it as Homey's built-in air quality level. The web UI shows the word next to the CO₂ reading.
 - This changelog, backfilled.
 
 ## 2026-11-25
