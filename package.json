@@ -7,7 +7,7 @@
   "private": true,
   "packageManager": "pnpm@11.22.0",
   "engines": {
-    "node": ">=22",
+    "node": ">=26",
     "pnpm": ">=11"
   },
   "scripts": {
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.6",
-    "@types/node": "^22.20.6",
+    "@types/node": "^26.6.10",
     "aedes": "^1.2.0",
     "eslint": "^10.15.0",
     "markdownlint-cli2": "^0.24.2",
