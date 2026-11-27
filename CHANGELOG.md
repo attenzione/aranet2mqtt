@@ -2,6 +2,10 @@
 
 Newest first, one section per day.
 
+## 2026-11-27
+
+- The Docker image is published to Docker Hub as `axeriano/aranet2mqtt`, for arm64 and amd64, whenever a version tag (`v1.2.3`) is pushed: tagged `1.2.3`, `1.2` and `latest`.
+
 ## 2026-11-26
 
 - The repository has a Sponsor button: GitHub Sponsors and Ko-fi.
