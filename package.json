@@ -1,9 +1,13 @@
 {
   "name": "aranet2mqtt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Aranet4 sensors on MQTT as a Zigbee2MQTT-style bridge, with a web UI.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/attenzione/aranet2mqtt.git"
+  },
   "private": true,
   "packageManager": "pnpm@11.22.0",
   "engines": {
