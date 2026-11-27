@@ -14,14 +14,15 @@ ARG ARANET_REF=e6410de96e2189dbda436c917f25863ff55d8e8d
 
 # ---------------------------------------------------------------------------
 # 1. The upstream `aranet` CLI, without the terminal dashboard or desktop GUI.
-FROM rust:1.99-slim-bookworm AS aranet-cli
+FROM rust:1.99-alpine AS aranet-cli
 ARG ARANET_REPO
 ARG ARANET_REF
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends pkg-config libdbus-1-dev libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache musl-dev pkgconf dbus-dev openssl-dev
 ADD --keep-git-dir=false ${ARANET_REPO}#${ARANET_REF} /src
 WORKDIR /src
+# Rust links musl binaries statically by default; libdbus has no static
+# library on Alpine, so link dynamically against the image's dbus-libs.
+ENV RUSTFLAGS="-C target-feature=-crt-static"
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/src/target \
     cargo build --release --locked -p aranet-cli --no-default-features --features cli \
@@ -29,7 +30,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
 
 # ---------------------------------------------------------------------------
 # 2. Node dependencies and the build.
-FROM node:26-bookworm-slim AS node-base
+FROM node:26-alpine AS node-base
 RUN npm install -g pnpm@11.22.0
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -48,12 +49,17 @@ RUN pnpm build
 
 # ---------------------------------------------------------------------------
 # 3. The image: Node, the aranet binary, the built app.
-FROM node:26-bookworm-slim
+FROM node:26-alpine
 ARG ARANET_REF
-# libdbus: the aranet binary talks to BlueZ over the system D-Bus.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends libdbus-1-3 tini \
-    && rm -rf /var/lib/apt/lists/*
+# dbus-libs: the aranet binary talks to BlueZ over the system D-Bus.
+# libgcc: unwinding for the dynamically linked Rust binary.
+# npm, npx, corepack and yarn go: the app never runs them, and their bundled
+# packages were most of the image's fixable vulnerabilities.
+RUN apk upgrade --no-cache \
+    && apk add --no-cache dbus-libs libgcc tini \
+    && rm -rf /usr/local/lib/node_modules /opt/yarn-* \
+        /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+        /usr/local/bin/yarn /usr/local/bin/yarnpkg
 COPY --from=aranet-cli /usr/local/bin/aranet /usr/local/bin/aranet
 WORKDIR /app
 COPY package.json ./
@@ -72,5 +78,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD ["node", "-e", "fetch(`http://127.0.0.1:${process.env.ARANET2MQTT_PORT||8080}/api/health`).then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
 
 # tini forwards SIGTERM to Node and reaps the aranet child processes.
-ENTRYPOINT ["tini", "--"]
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "dist/server/main.js"]
