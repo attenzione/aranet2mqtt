@@ -35,7 +35,7 @@ A sensor's IEEE address is derived from its Bluetooth name, which holds its seri
 
 ## Run
 
-The container needs a Linux host running BlueZ, with its system D-Bus mounted. On Ubuntu, Docker's default AppArmor profile blocks D-Bus, hence `apparmor=unconfined`:
+The image is on Docker Hub as `axeriano/aranet2mqtt`, for arm64 (the Pi) and amd64. The container needs a Linux host running BlueZ, with its system D-Bus mounted. On Ubuntu, Docker's default AppArmor profile blocks D-Bus, hence `apparmor=unconfined`:
 
 ```sh
 docker run -d --name aranet2mqtt --restart unless-stopped \
@@ -43,8 +43,10 @@ docker run -d --name aranet2mqtt --restart unless-stopped \
   -v /srv/aranet2mqtt:/data \
   -v /run/dbus:/run/dbus:ro \
   --security-opt apparmor=unconfined \
-  aranet2mqtt:0.1.4
+  axeriano/aranet2mqtt:latest
 ```
+
+To stay on one release, use its version tag (such as `0.2.0`) or `0.2` for its patches, in place of `latest`.
 
 Then open the web UI and fill in the broker under **MQTT**. **Test connection** checks the settings before **Save and reconnect** applies them.
 
@@ -60,8 +62,7 @@ The same with Docker Compose:
 ```yaml
 services:
   aranet2mqtt:
-    image: aranet2mqtt:0.1.4
-    pull_policy: never # built locally, see "Build"
+    image: axeriano/aranet2mqtt:latest
     container_name: aranet2mqtt
     restart: unless-stopped
     ports:
@@ -79,11 +80,22 @@ services:
 docker build -t aranet2mqtt:<version> .
 ```
 
-Build on an arm64 machine (an Apple-silicon Mac, or the Pi) or with `docker buildx --platform linux/arm64`. The first build compiles the upstream CLI in Rust and takes a few minutes. To ship it to the Pi:
+For a local image instead of the published one. For the Pi, build on an arm64 machine (an Apple-silicon Mac, or the Pi itself) or with `docker buildx build --platform linux/arm64`. The first build compiles the upstream CLI in Rust and takes a few minutes. To ship it to the Pi:
 
 ```sh
 docker save aranet2mqtt:<version> | gzip -1 | ssh <pi> 'gunzip | sudo docker load'
 ```
+
+## Release
+
+1. Bump `version` in `package.json` and merge it to main.
+2. Tag that commit and push the tag:
+
+   ```sh
+   git tag v<version> && git push origin v<version>
+   ```
+
+The [Publish](.github/workflows/publish.yml) workflow builds the image for arm64 and amd64 and pushes `<version>`, `<major>.<minor>` and `latest` to Docker Hub. It stops if the tag isn't `v` plus the version in `package.json`. To republish a release, run the workflow by hand from its tag.
 
 ## Develop
 
