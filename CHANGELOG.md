@@ -4,7 +4,7 @@ Newest first, one section per day.
 
 ## 2026-11-27
 
-- The Docker image is published to Docker Hub as `axeriano/aranet2mqtt`, for arm64 and amd64, whenever a version tag (`v1.2.3`) is pushed: tagged `1.2.3`, `1.2` and `latest`.
+- The Docker image is published to Docker Hub as `axeriano/aranet2mqtt`, for arm64 and amd64, whenever a version tag (`v1.2.3`) is pushed: tagged `1.2.3`, `1.2` and `latest`. amd64 is new; until now the image was built for arm64 only. The tag must be `v` plus the `version` in `package.json`, or the Publish workflow stops; the README's new Release section has the steps. The README's `docker run` and Compose examples use the published image instead of a locally built `aranet2mqtt:<version>`; building it yourself still works.
 
 ## 2026-11-26
 
