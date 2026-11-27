@@ -35,7 +35,7 @@ A sensor's IEEE address is derived from its Bluetooth name, which holds its seri
 
 ## Run
 
-The image is on Docker Hub as `axeriano/aranet2mqtt`, for arm64 (the Pi) and amd64. The container needs a Linux host running BlueZ, with its system D-Bus mounted. On Ubuntu, Docker's default AppArmor profile blocks D-Bus, hence `apparmor=unconfined`:
+The image is on Docker Hub as `axeriano/aranet2mqtt` and on GitHub as `ghcr.io/attenzione/aranet2mqtt`, for arm64 (the Pi) and amd64. The two are the same image; the examples use the Docker Hub name, and the GitHub one works in its place. The container needs a Linux host running BlueZ, with its system D-Bus mounted. On Ubuntu, Docker's default AppArmor profile blocks D-Bus, hence `apparmor=unconfined`:
 
 ```sh
 docker run -d --name aranet2mqtt --restart unless-stopped \
@@ -95,7 +95,7 @@ docker save aranet2mqtt:<version> | gzip -1 | ssh <pi> 'gunzip | sudo docker loa
    git tag v<version> && git push origin v<version>
    ```
 
-The [Publish](.github/workflows/publish.yml) workflow builds the image for arm64 and amd64 and pushes `<version>`, `<major>.<minor>` and `latest` to Docker Hub. It stops if the tag isn't `v` plus the version in `package.json`. To republish a release, run the workflow by hand from its tag.
+The [Publish](.github/workflows/publish.yml) workflow builds the image for arm64 and amd64 and pushes `<version>`, `<major>.<minor>` and `latest` to Docker Hub and ghcr.io. It stops if the tag isn't `v` plus the version in `package.json`. To republish a release, run the workflow by hand from its tag.
 
 ## Develop
 
