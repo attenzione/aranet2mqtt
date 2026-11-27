@@ -46,7 +46,7 @@ docker run -d --name aranet2mqtt --restart unless-stopped \
   axeriano/aranet2mqtt:latest
 ```
 
-To stay on one release, use its version tag (such as `0.1.5`) or `0.1` for its patches, in place of `latest`.
+To stay on one release, use its version tag (such as `0.2.0`) or `0.2` for its patches, in place of `latest`.
 
 Then open the web UI and fill in the broker under **MQTT**. **Test connection** checks the settings before **Save and reconnect** applies them.
 
